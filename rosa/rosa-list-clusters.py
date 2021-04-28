@@ -1,7 +1,5 @@
 #!/bin/env python3
 
-API='https://api.openshift.com/api/clusters_mgmt/v1'
-
 import requests
 from requests_oauthlib import OAuth2Session
 import json
@@ -9,10 +7,13 @@ from pathlib import Path
 import pprint
 import datetime
 from dateparser import parse
+import os
 
 pp = pprint.PrettyPrinter(indent=4)
 
-
+API='https://api.openshift.com/api/clusters_mgmt/v1'
+SKIP_CLUSTERS = ['mobb-infra', os.getenv('SKIP_CLUSTERS','').split(",")]
+DELETE = os.getenv('DELETE', False)
 # print(access_token)
 
 def get_token():
@@ -34,8 +35,14 @@ def get_token():
 
 
 def list_clusters(session):
+  clusters = []
   response = session.get(API + "/clusters/")
-  return response.json()['items']
+  for cluster in response.json()['items']:
+    if cluster['name'] not in SKIP_CLUSTERS:
+      clusters.append(cluster)
+    else:
+      print("-> skipping {0}".format(cluster['name']))
+  return clusters
 
 def describe_cluster(session, id):
   response = session.get("{0}/clusters/{1}".format(API,id))
@@ -54,10 +61,23 @@ def clusters_older_than_today(clusters):
         new.append(cluster)
   return old, new
 
+def delete_cluster(session, cluster):
+  if DELETE:
+    print("-> deleting cluster {0}".format(cluster['name']))
+    response = session.delete("{0}/clusters/{1}".format(API,cluster['id']))
+    if response.status_code == 204:
+      return True
+    else:
+      print("-> failed to delete cluster {0}".format(cluster['name']))
+      pp.pprint(response.json())
+      return False
+  else:
+    print("-> pretending to delete cluster {0}".format(cluster['name']))
+    return True
+
+
 
 # get list of clusters
-
-# access_token = get_token()
 
 session = requests.Session()
 session.headers.update({'Authorization': 'Bearer {0}'.format(get_token())})
@@ -67,9 +87,4 @@ clusters = list_clusters(session)
 old, new = clusters_older_than_today(clusters)
 
 for cluster in old:
-  # /api/clusters_mgmt/v1/clusters/{cluster_id}
-  # if cluster['name'] == "ca14a1be-83b1-432c-af8a-7ec4a20c56c0":
-
-    # desc = describe_cluster(session, cluster['id'])
-    pp.pprint(cluster)
-    break
+      delete_cluster(session, cluster)
