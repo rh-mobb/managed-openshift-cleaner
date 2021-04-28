@@ -14,12 +14,12 @@ pp = pprint.PrettyPrinter(indent=4)
 API='https://api.openshift.com/api/clusters_mgmt/v1'
 SKIP_CLUSTERS = ['mobb-infra', os.getenv('SKIP_CLUSTERS','').split(",")]
 DELETE = os.getenv('DELETE', False)
+OCM_JSON = os.getenv('OCM_JSON', str(Path.home()) + "/.ocm.json")
 # print(access_token)
 
 def get_token():
-  home = str(Path.home())
 
-  f = open(home + "/.ocm.json",)
+  f = open(OCM_JSON,)
   user = json.load(f)
 
   auth = (user['client_id'], user['access_token'])

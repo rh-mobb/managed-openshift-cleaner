@@ -23,9 +23,20 @@ spec:
       template:
         spec:
           containers:
-          - image: image-registry.openshift-image-registry.svc:5000/rosa-cleaner/rosa-cleaner@sha256:c595a8d75a36897e8d4a24d1b4c166e3ce805f4577983c83ae1b519bdde96d2a
+          - image: image-registry.openshift-image-registry.svc:5000/rosa-cleaner/rosa-cleaner:latest
             imagePullPolicy: Always
             name: rosa-cleaner
             command:
-            - ./clusters-older-than-today.py
+            - ./rosa-list-clusters.py
+            volumeMounts:
+            - name: rosa-auth
+              mountPath: /auth
+              readOnly: true
+            env:
+              name: OCM_JSON
+              value: /auth/.ocm.json
+          volumes:
+          - name: rosa-auth
+            secret:
+              secretName: openshift-cluster-manager-credentials
           restartPolicy: OnFailure
