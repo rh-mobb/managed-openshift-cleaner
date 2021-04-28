@@ -1,0 +1,31 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/vcs-ref: main
+    app.openshift.io/vcs-uri: https://gitlab.consulting.redhat.com/mobb/osd-cleaner
+    deployment.kubernetes.io/revision: "2"
+  labels:
+    app: rosa-cleaner
+    app.kubernetes.io/component: rosa-cleaner
+    app.kubernetes.io/instance: rosa-cleaner
+    app.kubernetes.io/name: python
+    app.kubernetes.io/part-of: rosa-cleaner-app
+    app.openshift.io/runtime: python
+    app.openshift.io/runtime-version: 3.8-ubi7
+  name: rosa-cleaner
+  namespace: rosa-cleaner
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - image: image-registry.openshift-image-registry.svc:5000/rosa-cleaner/rosa-cleaner@sha256:c595a8d75a36897e8d4a24d1b4c166e3ce805f4577983c83ae1b519bdde96d2a
+            imagePullPolicy: Always
+            name: rosa-cleaner
+            command:
+            - ./clusters-older-than-today.py
+          restartPolicy: OnFailure
