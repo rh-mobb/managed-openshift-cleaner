@@ -17,7 +17,7 @@ metadata:
   name: rosa-cleaner
   namespace: rosa-cleaner
 spec:
-  schedule: "*/1 * * * *"
+  schedule: "0 0 * * *"
   jobTemplate:
     spec:
       template:
@@ -36,7 +36,7 @@ spec:
             - name: OCM_JSON
               value: /auth/.ocm.json
             - name: DELETE
-              value: "0" # change to 1 to delete the old clusters
+              value: "1" # change to 1 to delete the old clusters
             - name: SKIP_CLUSTERS
               value: "" # csv of clusters to skip.  mobb-infra is always skipped.
           volumes:
