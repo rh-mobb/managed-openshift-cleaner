@@ -37,9 +37,13 @@ def get_token():
 def list_clusters(session):
   clusters = []
   response = session.get(API + "/clusters/")
+  pp.pprint(response.json())
   for cluster in response.json()['items']:
     if cluster['name'] not in SKIP_CLUSTERS and not cluster['name'].startswith('poc-'):
-      clusters.append(cluster)
+      if cluster['managed']:
+        clusters.append(cluster)
+      else:
+        print("-> skipping {0} (unmanaged / ARO)".format(cluster['name']))
     else:
       print("-> skipping {0}".format(cluster['name']))
   return clusters
