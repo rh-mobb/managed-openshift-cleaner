@@ -14,6 +14,7 @@ pp = pprint.PrettyPrinter(indent=4)
 API='https://api.openshift.com/api/clusters_mgmt/v1'
 SKIP_CLUSTERS = ['mobb-infra', os.getenv('SKIP_CLUSTERS','').split(",")]
 DELETE = os.getenv('DELETE', False)
+DEBUG = os.getenv('DEBUG', False)
 OCM_JSON = os.getenv('OCM_JSON', str(Path.home()) + "/.ocm.json")
 # print(access_token)
 
@@ -37,7 +38,8 @@ def get_token():
 def list_clusters(session):
   clusters = []
   response = session.get(API + "/clusters/")
-  pp.pprint(response.json())
+  if DEBUG:
+    pp.pprint(response.json())
   for cluster in response.json()['items']:
     if cluster['name'] not in SKIP_CLUSTERS and not cluster['name'].startswith('poc-'):
       if cluster['managed']:
