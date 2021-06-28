@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rosa-cleaner
+  namespace: rosa-cleaner
+secrets:
+  - name: gitlab-rosa-cleaner-auth
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rosa-cleaner-builder-pvc
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: rosa-cleaner
+  namespace: rosa-cleaner
+spec:
+  params:
+  - default: rosa-cleaner
+    name: APP_NAME
+    type: string
+  - default: https://gitlab.consulting.redhat.com/mobb/osd-cleaner
+    name: GIT_REPO
+    type: string
+  - default: main
+    name: GIT_REVISION
+    type: string
+  - default: image-registry.openshift-image-registry.svc:5000/rosa-cleaner/rosa-cleaner
+    name: IMAGE_NAME
+    type: string
+  - default: ./rosa
+    name: PATH_CONTEXT
+    type: string
+  tasks:
+  - name: fetch-repository
+    params:
+    - name: url
+      value: $(params.GIT_REPO)
+    - name: revision
+      value: $(params.GIT_REVISION)
+    - name: deleteExisting
+      value: "true"
+    taskRef:
+      kind: ClusterTask
+      name: git-clone
+    workspaces:
+    - name: output
+      workspace: workspace
+  - name: build-and-push
+    params:
+    - name: IMAGE
+      value: $(params.IMAGE_NAME)
+    - name: TLSVERIFY
+      value: "false"
+    - name: CONTEXT
+      value: $(params.PATH_CONTEXT)
+    runAfter:
+    - fetch-repository
+    taskRef:
+      kind: ClusterTask
+      name: buildah
+    workspaces:
+    - name: source
+      workspace: workspace
+  workspaces:
+  - name: workspace

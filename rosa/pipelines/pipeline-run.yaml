@@ -1,0 +1,12 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: rosa-cleaner
+  namespace: rosa-cleaner
+spec:
+  pipelineRef:
+    name: rosa-cleaner
+  workspaces:
+  - name: workspace
+    persistentVolumeClaim:
+      claimName: rosa-cleaner-builder-pvc
