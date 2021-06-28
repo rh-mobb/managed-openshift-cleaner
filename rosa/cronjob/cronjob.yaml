@@ -27,7 +27,7 @@ spec:
             imagePullPolicy: Always
             name: rosa-cleaner
             command:
-            - ./rosa-list-clusters.py
+            - ./rosa-cleaner.py
             volumeMounts:
             - name: rosa-auth
               mountPath: /auth
