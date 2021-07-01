@@ -12,7 +12,7 @@ import os
 pp = pprint.PrettyPrinter(indent=4)
 
 API='https://api.openshift.com/api/clusters_mgmt/v1'
-SKIP_CLUSTERS = ['mobb-infra', os.getenv('SKIP_CLUSTERS','').split(",")]
+SKIP_CLUSTERS = ['mobb-infra', 'mobb-infra-gcp', os.getenv('SKIP_CLUSTERS','').split(",")]
 DELETE = os.getenv('DELETE', False)
 DEBUG = os.getenv('DEBUG', False)
 OCM_JSON = os.getenv('OCM_JSON', str(Path.home()) + "/.ocm.json")
