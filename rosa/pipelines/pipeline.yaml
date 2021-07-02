@@ -1,11 +1,11 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: rosa-cleaner
-  namespace: rosa-cleaner
-secrets:
-  - name: gitlab-rosa-cleaner-auth
----
+# apiVersion: v1
+# kind: ServiceAccount
+# metadata:
+#   name: rosa-cleaner
+#   namespace: rosa-cleaner
+# secrets:
+#   - name: gitlab-rosa-cleaner-auth
+# ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -24,6 +24,8 @@ metadata:
   name: rosa-cleaner
   namespace: rosa-cleaner
 spec:
+  workspaces:
+  - name: workspace
   params:
   - default: rosa-cleaner
     name: APP_NAME
@@ -71,5 +73,18 @@ spec:
     workspaces:
     - name: source
       workspace: workspace
-  workspaces:
-  - name: workspace
+  - name: oc-apply-cronjob
+    params:
+    - name: SCRIPT
+      value: oc $@
+    - name: ARGS
+      value: ["apply", "-f", "/workspace/source/$(params.PATH_CONTEXT)/cronjob/cronjob.yaml"]
+    runAfter:
+    - build-and-push
+    taskRef:
+      kind: ClusterTask
+      name: openshift-client
+    workspaces:
+    - name: source
+      workspace: workspace
+

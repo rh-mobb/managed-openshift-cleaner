@@ -2,10 +2,6 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   annotations:
-    alpha.image.policy.openshift.io/resolve-names: '*'
-    app.openshift.io/vcs-ref: main
-    app.openshift.io/vcs-uri: https://gitlab.consulting.redhat.com/mobb/osd-cleaner
-    deployment.kubernetes.io/revision: "2"
   labels:
     app: rosa-cleaner
     app.kubernetes.io/component: rosa-cleaner

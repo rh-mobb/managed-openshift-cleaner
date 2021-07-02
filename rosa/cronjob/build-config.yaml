@@ -1,116 +1,118 @@
-apiVersion: build.openshift.io/v1
-kind: BuildConfig
-metadata:
-  annotations:
-    app.openshift.io/vcs-ref: main
-    app.openshift.io/vcs-uri: https://gitlab.consulting.redhat.com/mobb/osd-cleaner
-    openshift.io/generated-by: OpenShiftWebConsole
-  creationTimestamp: "2021-04-28T16:59:14Z"
-  generation: 2
-  labels:
-    app: rosa-cleaner
-    app.kubernetes.io/component: rosa-cleaner
-    app.kubernetes.io/instance: rosa-cleaner
-    app.kubernetes.io/name: python
-    app.kubernetes.io/part-of: rosa-cleaner-app
-    app.openshift.io/runtime: python
-    app.openshift.io/runtime-version: 3.8-ubi7
-  managedFields:
-  - apiVersion: build.openshift.io/v1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:metadata:
-        f:annotations:
-          .: {}
-          f:app.openshift.io/vcs-ref: {}
-          f:app.openshift.io/vcs-uri: {}
-          f:openshift.io/generated-by: {}
-        f:labels:
-          .: {}
-          f:app: {}
-          f:app.kubernetes.io/component: {}
-          f:app.kubernetes.io/instance: {}
-          f:app.kubernetes.io/name: {}
-          f:app.kubernetes.io/part-of: {}
-          f:app.openshift.io/runtime: {}
-          f:app.openshift.io/runtime-version: {}
-      f:spec:
-        f:output:
-          f:to:
-            .: {}
-            f:kind: {}
-            f:name: {}
-        f:runPolicy: {}
-        f:source:
-          f:contextDir: {}
-          f:git:
-            .: {}
-            f:ref: {}
-            f:uri: {}
-          f:sourceSecret:
-            .: {}
-            f:name: {}
-          f:type: {}
-        f:strategy:
-          f:sourceStrategy:
-            .: {}
-            f:from:
-              .: {}
-              f:kind: {}
-              f:name: {}
-              f:namespace: {}
-          f:type: {}
-    manager: Mozilla
-    operation: Update
-    time: "2021-04-28T16:59:14Z"
-  - apiVersion: build.openshift.io/v1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:spec:
-        f:triggers: {}
-      f:status:
-        f:lastVersion: {}
-    manager: openshift-apiserver
-    operation: Update
-    time: "2021-04-28T16:59:14Z"
-  name: rosa-cleaner
-  namespace: rosa-cleaner
-  resourceVersion: "505001"
-  uid: ad176277-0586-4a3d-9cea-d21fb658eeb8
-spec:
-  failedBuildsHistoryLimit: 5
-  nodeSelector: null
-  output:
-    to:
-      kind: ImageStreamTag
-      name: rosa-cleaner:latest
-  postCommit: {}
-  resources: {}
-  runPolicy: Serial
-  source:
-    contextDir: /rosa
-    git:
-      ref: main
-      uri: https://gitlab.consulting.redhat.com/mobb/osd-cleaner
-    sourceSecret:
-      name: gitlab-rosa-cleaner-auth
-    type: Git
-  strategy:
-    sourceStrategy:
-      from:
-        kind: ImageStreamTag
-        name: python:3.8-ubi7
-        namespace: openshift
-    type: Source
-  successfulBuildsHistoryLimit: 5
-  triggers:
-  - generic:
-      secretReference:
-        name: rosa-cleaner-generic-webhook-secret
-    type: Generic
-  - imageChange:
-      lastTriggeredImageID: image-registry.openshift-image-registry.svc:5000/openshift/python@sha256:13335e3cd5d611936bb511e003273112d2db0cedf62ac8b4227b778a8e98530c
-    type: ImageChange
-  - type: ConfigChange
-status:
-  lastVersion: 1
+#### do not use, replaced by tekton pipeline
+
+# apiVersion: build.openshift.io/v1
+# kind: BuildConfig
+# metadata:
+#   annotations:
+#     app.openshift.io/vcs-ref: main
+#     app.openshift.io/vcs-uri: https://gitlab.consulting.redhat.com/mobb/osd-cleaner
+#     openshift.io/generated-by: OpenShiftWebConsole
+#   creationTimestamp: "2021-04-28T16:59:14Z"
+#   generation: 2
+#   labels:
+#     app: rosa-cleaner
+#     app.kubernetes.io/component: rosa-cleaner
+#     app.kubernetes.io/instance: rosa-cleaner
+#     app.kubernetes.io/name: python
+#     app.kubernetes.io/part-of: rosa-cleaner-app
+#     app.openshift.io/runtime: python
+#     app.openshift.io/runtime-version: 3.8-ubi7
+#   managedFields:
+#   - apiVersion: build.openshift.io/v1
+#     fieldsType: FieldsV1
+#     fieldsV1:
+#       f:metadata:
+#         f:annotations:
+#           .: {}
+#           f:app.openshift.io/vcs-ref: {}
+#           f:app.openshift.io/vcs-uri: {}
+#           f:openshift.io/generated-by: {}
+#         f:labels:
+#           .: {}
+#           f:app: {}
+#           f:app.kubernetes.io/component: {}
+#           f:app.kubernetes.io/instance: {}
+#           f:app.kubernetes.io/name: {}
+#           f:app.kubernetes.io/part-of: {}
+#           f:app.openshift.io/runtime: {}
+#           f:app.openshift.io/runtime-version: {}
+#       f:spec:
+#         f:output:
+#           f:to:
+#             .: {}
+#             f:kind: {}
+#             f:name: {}
+#         f:runPolicy: {}
+#         f:source:
+#           f:contextDir: {}
+#           f:git:
+#             .: {}
+#             f:ref: {}
+#             f:uri: {}
+#           f:sourceSecret:
+#             .: {}
+#             f:name: {}
+#           f:type: {}
+#         f:strategy:
+#           f:sourceStrategy:
+#             .: {}
+#             f:from:
+#               .: {}
+#               f:kind: {}
+#               f:name: {}
+#               f:namespace: {}
+#           f:type: {}
+#     manager: Mozilla
+#     operation: Update
+#     time: "2021-04-28T16:59:14Z"
+#   - apiVersion: build.openshift.io/v1
+#     fieldsType: FieldsV1
+#     fieldsV1:
+#       f:spec:
+#         f:triggers: {}
+#       f:status:
+#         f:lastVersion: {}
+#     manager: openshift-apiserver
+#     operation: Update
+#     time: "2021-04-28T16:59:14Z"
+#   name: rosa-cleaner
+#   namespace: rosa-cleaner
+#   resourceVersion: "505001"
+#   uid: ad176277-0586-4a3d-9cea-d21fb658eeb8
+# spec:
+#   failedBuildsHistoryLimit: 5
+#   nodeSelector: null
+#   output:
+#     to:
+#       kind: ImageStreamTag
+#       name: rosa-cleaner:latest
+#   postCommit: {}
+#   resources: {}
+#   runPolicy: Serial
+#   source:
+#     contextDir: /rosa
+#     git:
+#       ref: main
+#       uri: https://gitlab.consulting.redhat.com/mobb/osd-cleaner
+#     sourceSecret:
+#       name: gitlab-rosa-cleaner-auth
+#     type: Git
+#   strategy:
+#     sourceStrategy:
+#       from:
+#         kind: ImageStreamTag
+#         name: python:3.8-ubi7
+#         namespace: openshift
+#     type: Source
+#   successfulBuildsHistoryLimit: 5
+#   triggers:
+#   - generic:
+#       secretReference:
+#         name: rosa-cleaner-generic-webhook-secret
+#     type: Generic
+#   - imageChange:
+#       lastTriggeredImageID: image-registry.openshift-image-registry.svc:5000/openshift/python@sha256:13335e3cd5d611936bb511e003273112d2db0cedf62ac8b4227b778a8e98530c
+#     type: ImageChange
+#   - type: ConfigChange
+# status:
+#   lastVersion: 1
