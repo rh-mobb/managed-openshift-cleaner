@@ -1,49 +1,64 @@
+# ROSA Cleaner
+
 # Image Build Pipeline
 
-Create a namespace
+1. Create a namespace
 
-```
-kubectl create ns rosa-cleaner
-```
+    ```
+    kubectl create ns rosa-cleaner
+    ```
 
-Create a secret for gitlab credentials
+1. Create a secret for gitlab credentials
 
-```
-cat << EOF | kubectl apply -f
-apiVersion: v1
-kind: Secret
-type: kubernetes.io/basic-auth
-metadata:
-  annotations:
-    tekton.dev/git-0: https://gitlab.consulting.redhat.com/
-  name: gitlab-rosa-cleaner-auth
-  namespace: rosa-cleaner
-stringData:
-  password: <username>
-  username: <password>
-EOF
-```
+    ```
+    cat << EOF | kubectl apply -f
+    apiVersion: v1
+    kind: Secret
+    type: kubernetes.io/basic-auth
+    metadata:
+      annotations:
+        tekton.dev/git-0: https://gitlab.consulting.redhat.com/
+      name: gitlab-rosa-cleaner-auth
+      namespace: rosa-cleaner
+    stringData:
+      password: <username>
+      username: <password>
+    EOF
+    ```
 
-Link that secret to the pipeline builder user
+1. Create a secret for OCM credentials
 
-```
-oc secret link pipeline gitlab-rosa-cleaner-auth
-```
+    ```
+    kubectl create secret generic openshift-cluster-manager-credentials \
+      --from-file=$HOME/.ocm.json
 
-Create the tekton pipeline
+1. Link that secret to the pipeline builder user
 
-```
-k apply -f k8s/pipeline.yaml
-```
+    ```
+    oc secret link pipeline gitlab-rosa-cleaner-auth
+    ```
 
-Test the pipeline
+1. Patch the openshift-client clusterTask
 
-```
-k apply -f k8s/pipeline-run.yaml
-```
+    ```
+    oc patch clustertask openshift-client --type=merge \
+      -p='{"spec":{"workspaces":[{"name":"source"}]}}'
+    ```
 
-Create the build trigger
+1. Create the tekton pipeline
 
-```
-k apply -f k8s/trigger.yaml
-```
+    ```
+    k apply -f k8s/pipeline.yaml
+    ```
+
+1. Test the Pipeline
+
+    ```
+    k apply -f k8s/pipeline-run.yaml
+    ```
+
+1. Create the build trigger
+
+    ```
+    k apply -f k8s/trigger.yaml
+    ```
