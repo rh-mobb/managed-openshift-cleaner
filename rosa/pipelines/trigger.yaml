@@ -54,10 +54,11 @@ metadata:
 spec:
   serviceAccountName: pipeline
   triggers:
-  - bindings:
-    - ref: rosa-cleaner
-    template:
-      name: rosa-cleaner
+    - name: rosa-cleaner
+      bindings:
+        - ref: rosa-cleaner
+      template:
+        ref: rosa-cleaner
 ---
 apiVersion: route.openshift.io/v1
 kind: Route
