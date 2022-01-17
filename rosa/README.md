@@ -1,17 +1,22 @@
 # ROSA Cleaner
 
+## Prerequisites
+
+* ROSA Cluster
+* RedHat Pipelines
+
 # Image Build Pipeline
 
 1. Create a namespace
 
     ```
-    kubectl create ns rosa-cleaner
+    oc new-project rosa-cleaner
     ```
 
-1. Create a secret for gitlab credentials
+1. Create a secret for gitlab credentials (create a gitlab auth token for the repo)
 
     ```
-    cat << EOF | kubectl apply -f
+    cat << EOF | kubectl apply -f -
     apiVersion: v1
     kind: Secret
     type: kubernetes.io/basic-auth
@@ -48,17 +53,17 @@
 1. Create the tekton pipeline
 
     ```
-    k apply -f k8s/pipeline.yaml
+    k apply -f pipelines/pipeline.yaml
     ```
 
 1. Test the Pipeline
 
     ```
-    k apply -f k8s/pipeline-run.yaml
+    k apply -f pipelines/pipeline-run.yaml
     ```
 
 1. Create the build trigger
 
     ```
-    k apply -f k8s/trigger.yaml
+    k apply -f pipelines/trigger.yaml
     ```
