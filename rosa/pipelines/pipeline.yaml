@@ -76,15 +76,20 @@ spec:
   - name: oc-apply-cronjob
     params:
     - name: SCRIPT
-      value: oc $@
-    - name: ARGS
-      value: ["apply", "-f", "/workspace/source/$(params.PATH_CONTEXT)/cronjob/cronjob.yaml"]
+      value: |
+        oc apply -f <(cat rosa/cronjob/cronjob.yaml | sed 's/rosa-cleaner:latest$/rosa-cleaner@$(tasks.build-and-push.results.IMAGE_DIGEST)/')
+      # sleep 1
+      # oc patch cronjob rosa-cleaner --type=merge -p='{"spec": "jobTemplate": {"spec": {"template": {"spec": {"containers": [{"image": "$(tasks.build-and-push.results.IMAGE_DIGEST)"}}]}}}}'
+      # value:
+      #   - "apply"
+      #   - "-f"
+      #   - '<(cat cronjob/cronjob.yaml | sed "s/:latest$/@`cat /workspace/source/image-digest`/")'
     runAfter:
     - build-and-push
     taskRef:
       kind: ClusterTask
       name: openshift-client
     workspaces:
-    - name: source
+    - name: manifest-dir
       workspace: workspace
 
