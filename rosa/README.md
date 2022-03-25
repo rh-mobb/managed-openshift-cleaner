@@ -1,11 +1,67 @@
-# ROSA Cleaner
+
+# ROSA Cleaner in stand alone
+
+## Prerequisites
+
+* AWS CLI configured
+* OCM.json is in the home path
+* Python installed
+
+## what does [rolsa-cleaner.py](./rosa-cleaner.py) do 
+
+* The cleaner deletes rosa cluster through red hat cluster manager
+* The cleaner cleans up the oidc connector provider and sts roles
+* By Default it only cleans up the clusters deployed yesterday
+
+### How to run
+
+* By Default it is doing dry run
+
+```
+python rosa-cleaner.py
+```
+
+* Enable Delete
+
+```
+DELETE="1" python rosa-cleaner.py
+```
+
+* Delete New Cluster as well
+
+```
+DELETE_NEW_CLUSTERS=[CLUSTER_NAME] DELETE="1" python rosa-cleaner.py
+```
+
+* Skip Certian Clusters
+
+```
+SKIP_CLUSTERS=[CLUSTER_NAME] DELETE="1" python rosa-cleaner.py
+```
+
+## what does [orphan-iam-cleaner.py](./orphan-iam-cleaner.py) do
+
+In case the a rosa cluster were deleted, but the sts roles and oidc connector deletion failed. 
+This scripts deletes rosa roles and oidc providers, which does not belong to any mobb rosa clusters.
+
+Always dry run first
+```
+python orphan-iam-cleaner.py
+```
+
+Enable delete action
+```
+DELETE='1' python orphan-iam-cleaner.py python orphan-iam-cleaner.py
+```
+
+# ROSA Cleaner In the pipeline
 
 ## Prerequisites
 
 * ROSA Cluster
 * RedHat Pipelines
 
-# Image Build Pipeline
+## Image Build Pipeline
 
 1. Create a namespace
 
