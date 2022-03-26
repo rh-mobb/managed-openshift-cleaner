@@ -1,0 +1,11 @@
+Helpful commands for az cli
+
+Delete all RGs
+for i in `az group list | jq ".[] | .name" | awk -F\" '{print $2}'`; do
+az group delete --resource-group $i -y
+done
+
+
+
+
+
