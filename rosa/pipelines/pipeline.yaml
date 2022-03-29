@@ -26,6 +26,7 @@ metadata:
 spec:
   workspaces:
   - name: workspace
+  - name: gitlab-rosa-cleaner-clone-auth
   params:
   - default: rosa-cleaner
     name: APP_NAME
@@ -57,6 +58,8 @@ spec:
     workspaces:
     - name: output
       workspace: workspace
+    - name: basic-auth
+      workspace: gitlab-rosa-cleaner-clone-auth
   - name: build-and-push
     params:
     - name: IMAGE

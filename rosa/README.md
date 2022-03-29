@@ -87,6 +87,22 @@ DELETE='1' python orphan-iam-cleaner.py python orphan-iam-cleaner.py
     EOF
     ```
 
+1. Create a secret for gitlab tekton credentials
+
+    ```
+    kind: Secret
+    apiVersion: v1
+    metadata:
+      name: gitlab-rosa-cleaner-clone-auth
+    type: Opaque
+    stringData:
+      .gitconfig: |
+        [credential "https://gitlab.consulting.redhat.com"]
+          helper = store
+      .git-credentials: |
+        https://username:password@gitlab.consulting.redhat.com
+    ```
+
 1. Create a secret for OCM credentials
 
     ```
