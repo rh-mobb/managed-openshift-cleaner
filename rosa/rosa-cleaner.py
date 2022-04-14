@@ -49,11 +49,11 @@ def list_clusters(session):
         pp.pprint(response.json())
     for cluster in response.json()['items']:
         if cluster['name'] not in SKIP_CLUSTERS and not cluster['name'].startswith('poc-'):
-            if cluster['managed']:
+            if cluster['managed'] and cluster['cloud_provider']['id'] == 'aws' :
                 clusters.append(cluster)
             else:
                 print(
-                    "-> skipping {0} (unmanaged / ARO)".format(cluster['name']))
+                    "-> skipping {0} (unmanaged / ARO / GCP)".format(cluster['name']))
         else:
             print("-> skipping {0}".format(cluster['name']))
     return clusters
