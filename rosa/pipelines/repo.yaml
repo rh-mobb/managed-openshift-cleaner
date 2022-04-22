@@ -1,0 +1,34 @@
+---
+apiVersion: polling.tekton.dev/v1alpha1
+kind: Repository
+metadata:
+  name: osd-cleaner-repo
+  namespace: rosa-cleaner
+spec:
+  url: https://gitlab.consulting.redhat.com/mobb/osd-cleaner
+  ref: main
+  frequency: 5m
+  type: gitlab
+  pipelineRef:
+    name: rosa-cleaner
+    namespace: rosa-cleaner
+    params:
+    - name: GIT_REVISION
+      expression: commit.id
+    workspaces:
+    - name: workspace
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+    - name: gitlab-rosa-cleaner-clone-auth
+      secret:
+        secretName: gitlab-rosa-cleaner-clone-auth
+  auth:
+    secretRef:
+      name: gitlab-rosa-cleaner-auth
+      namespace: rosa-cleaner
+    key: password
