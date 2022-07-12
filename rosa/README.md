@@ -69,45 +69,53 @@ DELETE='1' python orphan-iam-cleaner.py python orphan-iam-cleaner.py
     oc new-project rosa-cleaner
     ```
 
-1. Create a secret for gitlab credentials (create a gitlab auth token for the repo)
+1. Create a secret for gitlab credentials (create a gitlab auth token for the repo) and save them as Env Variables
 
-    ```
-    cat << EOF | kubectl apply -f -
-    apiVersion: v1
-    kind: Secret
-    type: kubernetes.io/basic-auth
-    metadata:
-      annotations:
-        tekton.dev/git-0: https://gitlab.consulting.redhat.com/
-      name: gitlab-rosa-cleaner-auth
-      namespace: rosa-cleaner
-    stringData:
-      password: <username>
-      username: <password>
-    EOF
-    ```
+   ```
+   export GL_USERNAME=osd-cleaner
+   export GL_PASSWORD=<token>
+   ```
+
+
+   ```
+   cat << EOF | kubectl apply -f -
+   apiVersion: v1
+   kind: Secret
+   type: kubernetes.io/basic-auth
+   metadata:
+     annotations:
+       tekton.dev/git-0: https://gitlab.consulting.redhat.com/
+     name: gitlab-rosa-cleaner-auth
+     namespace: rosa-cleaner
+   stringData:
+     password: $GL_USERNAME
+     username: $GL_PASSWORD
+   EOF
+   ```
 
 1. Create a secret for gitlab tekton credentials
 
-    ```
-    kind: Secret
-    apiVersion: v1
-    metadata:
-      name: gitlab-rosa-cleaner-clone-auth
-    type: Opaque
-    stringData:
-      .gitconfig: |
-        [credential "https://gitlab.consulting.redhat.com"]
-          helper = store
-      .git-credentials: |
-        https://username:password@gitlab.consulting.redhat.com
-    ```
+   ```
+   cat << EOF | kubectl apply -f -
+   kind: Secret
+   apiVersion: v1
+   metadata:
+     name: gitlab-rosa-cleaner-clone-auth
+   type: Opaque
+   stringData:
+     .gitconfig: |
+       [credential "https://gitlab.consulting.redhat.com"]
+         helper = store
+     .git-credentials: |
+       https://$GL_USERNAME:$GL_PASSWORD@gitlab.consulting.redhat.com
+   EOF
+   ```
 
 1. Create a secret for OCM credentials
 
     ```
     kubectl create secret generic openshift-cluster-manager-credentials \
-      --from-file=$HOME/.ocm.json
+      --from-file=$HOME/.config/ocm/ocm.json
 
 1. Link that secret to the pipeline builder user
 
