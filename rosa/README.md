@@ -7,7 +7,7 @@
 * OCM.json is in the home path
 * Python installed
 
-## what does [rolsa-cleaner.py](./rosa-cleaner.py) do 
+## what does [rolsa-cleaner.py](./rosa-cleaner.py) do
 
 * The cleaner deletes rosa cluster through red hat cluster manager
 * The cleaner cleans up the oidc connector provider and sts roles
@@ -41,7 +41,7 @@ SKIP_CLUSTERS=[CLUSTER_NAME] DELETE="1" python rosa-cleaner.py
 
 ## what does [orphan-iam-cleaner.py](./orphan-iam-cleaner.py) do
 
-In case the a rosa cluster were deleted, but the sts roles and oidc connector deletion failed. 
+In case the a rosa cluster were deleted, but the sts roles and oidc connector deletion failed.
 This scripts deletes rosa roles and oidc providers, which does not belong to any mobb rosa clusters.
 
 Always dry run first
@@ -78,37 +78,39 @@ DELETE='1' python orphan-iam-cleaner.py python orphan-iam-cleaner.py
 
 
    ```
-   cat << EOF | kubectl apply -f -
-   apiVersion: v1
-   kind: Secret
-   type: kubernetes.io/basic-auth
-   metadata:
-     annotations:
-       tekton.dev/git-0: https://gitlab.consulting.redhat.com/
-     name: gitlab-rosa-cleaner-auth
-     namespace: rosa-cleaner
-   stringData:
-     password: $GL_USERNAME
-     username: $GL_PASSWORD
-   EOF
+cat << EOF | kubectl apply -f -
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/basic-auth
+metadata:
+  annotations:
+    tekton.dev/git-0: https://gitlab.consulting.redhat.com/
+  name: gitlab-rosa-cleaner-auth
+  namespace: rosa-cleaner
+stringData:
+  password: $GL_USERNAME
+  username: $GL_PASSWORD
+EOF
    ```
 
 1. Create a secret for gitlab tekton credentials
 
    ```
-   cat << EOF | kubectl apply -f -
-   kind: Secret
-   apiVersion: v1
-   metadata:
-     name: gitlab-rosa-cleaner-clone-auth
-   type: Opaque
-   stringData:
-     .gitconfig: |
-       [credential "https://gitlab.consulting.redhat.com"]
-         helper = store
-     .git-credentials: |
-       https://$GL_USERNAME:$GL_PASSWORD@gitlab.consulting.redhat.com
-   EOF
+cat << EOF | kubectl apply -f -
+kind: Secret
+apiVersion: v1
+metadata:
+  name: gitlab-rosa-cleaner-clone-auth
+type: Opaque
+stringData:
+  .gitconfig: |
+    [credential]
+      helper = store
+    [credential "https://gitlab.consulting.redhat.com"]
+      username = $GL_USERNAME
+  .git-credentials: |
+    https://$GL_USERNAME:$GL_PASSWORD@gitlab.consulting.redhat.com
+EOF
    ```
 
 1. Create a secret for OCM credentials
@@ -133,17 +135,17 @@ DELETE='1' python orphan-iam-cleaner.py python orphan-iam-cleaner.py
 1. Create the tekton pipeline
 
     ```
-    k apply -f pipelines/pipeline.yaml
+    oc apply -f pipelines/pipeline.yaml
     ```
 
 1. Test the Pipeline
 
     ```
-    k apply -f pipelines/pipeline-run.yaml
+    oc apply -f pipelines/pipeline-run.yaml
     ```
 
 1. Create the build trigger
 
     ```
-    k apply -f pipelines/trigger.yaml
+    oc apply -f pipelines/trigger.yaml
     ```

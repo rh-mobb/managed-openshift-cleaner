@@ -80,7 +80,7 @@ spec:
     params:
     - name: SCRIPT
       value: |
-        oc apply -f <(cat rosa/cronjob/cronjob.yaml | sed 's/rosa-cleaner:latest$/rosa-cleaner@$(tasks.build-and-push.results.IMAGE_DIGEST)/')
+        oc apply -f <(cat ./rosa/cronjob/cronjob.yaml | sed 's/rosa-cleaner:latest$/rosa-cleaner@$(tasks.build-and-push.results.IMAGE_DIGEST)/')
       # sleep 1
       # oc patch cronjob rosa-cleaner --type=merge -p='{"spec": "jobTemplate": {"spec": {"template": {"spec": {"containers": [{"image": "$(tasks.build-and-push.results.IMAGE_DIGEST)"}}]}}}}'
       # value:
