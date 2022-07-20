@@ -69,6 +69,14 @@ DELETE='1' python orphan-iam-cleaner.py python orphan-iam-cleaner.py
     oc new-project rosa-cleaner
     ```
 
+1. Create a secret for AWS credentials (user rosa-cleaner)
+
+    ```
+    oc create secret generic aws-iam-cleaner-secret \
+      --from-literal=AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID> \
+      --from-literal=AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
+    ```
+
 1. Create a secret for gitlab credentials (create a gitlab auth token for the repo) and save them as Env Variables
 
    ```
