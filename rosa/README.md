@@ -73,8 +73,8 @@ DELETE='1' python orphan-iam-cleaner.py python orphan-iam-cleaner.py
 
     ```
     oc create secret generic aws-iam-cleaner-secret \
-      --from-literal=AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID> \
-      --from-literal=AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
+      --from-literal=aws_access_key_id=<AWS_ACCESS_KEY_ID> \
+      --from-literal=aws_secret_access_key=<AWS_SECRET_ACCESS_KEY>
     ```
 
 1. Create a secret for gitlab credentials (create a gitlab auth token for the repo) and save them as Env Variables
