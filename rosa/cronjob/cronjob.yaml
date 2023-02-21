@@ -1,16 +1,15 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  annotations:
   labels:
-    app: rosa-cleaner
-    app.kubernetes.io/component: rosa-cleaner
-    app.kubernetes.io/instance: rosa-cleaner
+    app: rosa-cleaner-east
+    app.kubernetes.io/component: rosa-cleaner-east
+    app.kubernetes.io/instance: rosa-cleaner-east
     app.kubernetes.io/name: python
     app.kubernetes.io/part-of: rosa-cleaner-app
     app.openshift.io/runtime: python
     app.openshift.io/runtime-version: 3.8-ubi7
-  name: rosa-cleaner
+  name: rosa-cleaner-east
   namespace: rosa-cleaner
 spec:
   schedule: "0 0 * * *"
@@ -29,6 +28,8 @@ spec:
               mountPath: /auth
               readOnly: true
             env:
+            - name: INCLUDE_REGIONS
+              value: "us-east-1,us-east-2"
             - name: OCM_JSON
               value: /auth/ocm.json
             - name: DELETE
