@@ -72,6 +72,9 @@ metadata:
     eventlistener: rosa-cleaner
   name: el-rosa-cleaner
 spec:
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
   port:
     targetPort: http-listener
   to:
