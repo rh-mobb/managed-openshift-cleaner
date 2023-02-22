@@ -36,7 +36,7 @@ spec:
             - name: DELETE
               value: "1" # change to 1 to delete the old clusters
             - name: SKIP_CLUSTERS
-              value: "mhs-pri-link" # csv of clusters to skip.  mobb-infra is always skipped.
+              value: "" # csv of clusters to skip.  mobb-infra is always skipped.
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -92,7 +92,7 @@ spec:
             - name: DELETE
               value: "1" # change to 1 to delete the old clusters
             - name: SKIP_CLUSTERS
-              value: "mhs-pri-link" # csv of clusters to skip.  mobb-infra is always skipped.
+              value: "" # csv of clusters to skip.  mobb-infra is always skipped.
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
