@@ -20,8 +20,8 @@ DELETE_NEW_CLUSTERS = os.getenv('DELETE_NEW_CLUSTERS', '').split(",")
 DELETE = os.getenv('DELETE', False)
 DEBUG = os.getenv('DEBUG', False)
 OCM_JSON = os.getenv('OCM_JSON', str(Path.home()) + "/.ocm.json")
-
-# print(access_token)
+INCLUDE_REGIONS = list(filter(None, os.environ.get('INCLUDE_REGIONS', '').split(",")))
+EXCLUDE_REGIONS = list(filter(None, os.environ.get('EXCLUDE_REGIONS', '').split(",")))
 
 
 def get_token():
@@ -49,7 +49,11 @@ def list_clusters(session):
     for cluster in response.json()['items']:
         if cluster['name'] not in SKIP_CLUSTERS and not cluster['name'].startswith('poc-'):
             if cluster['managed'] and cluster['cloud_provider']['id'] == 'aws' :
-                clusters.append(cluster)
+                if included_by_region(cluster) and not excluded_by_region(cluster):
+                    clusters.append(cluster)
+                else:
+                    print(
+                        "-> skipping {0} (regional filter [{1}])".format(cluster['name'], cluster['region']['id']))                
             else:
                 print(
                     "-> skipping {0} (unmanaged / ARO / GCP)".format(cluster['name']))
@@ -91,6 +95,18 @@ def wait_for_deletion(session, cluster):
               break
         except requests.exceptions.RequestException as e:
           print(e)
+
+
+def included_by_region(cluster):
+    # all regions are included by default if no regions are specified
+    if len(INCLUDE_REGIONS) == 0:
+        return True
+
+    return cluster['region']['id'] in INCLUDE_REGIONS
+
+
+def excluded_by_region(cluster):
+    return cluster['region']['id'] in EXCLUDE_REGIONS
 
 
 def delete_cluster(session, cluster):
