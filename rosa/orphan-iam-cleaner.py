@@ -34,7 +34,7 @@ def get_token():
 
 def find_rosa_clusters(session):
     clusters = []
-    response = session.get(API + "/clusters/")
+    response = session.get(API + "/clusters/?size=500")
 #   print(json.dumps(response.json()))
     for cluster in response.json()['items']:
         if cluster['product']['id'] == 'rosa':
