@@ -70,8 +70,10 @@ metadata:
     app.kubernetes.io/managed-by: EventListener
     app.kubernetes.io/part-of: Triggers
     eventlistener: rosa-cleaner
-  name: el-rosa-cleaner
+  name: rosa-cleaner-listener
+  namespace: rosa-cleaner
 spec:
+  host: "cleaner.infra.mobb.cloud"
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
