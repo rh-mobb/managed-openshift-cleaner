@@ -5,7 +5,7 @@ metadata:
   name: osd-cleaner-repo
   namespace: rosa-cleaner
 spec:
-  url: https://gitlab.consulting.redhat.com/mobb/osd-cleaner
+  url: https://github.com/rh-mobb/managed-openshift-cleaner
   ref: main
   frequency: 5m
   type: gitlab

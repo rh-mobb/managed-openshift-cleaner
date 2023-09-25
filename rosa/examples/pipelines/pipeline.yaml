@@ -32,7 +32,7 @@ spec:
   - default: rosa-cleaner
     name: APP_NAME
     type: string
-  - default: https://gitlab.consulting.redhat.com/mobb/osd-cleaner
+  - default: https://github.com/rh-mobb/managed-openshift-cleaner
     name: GIT_REPO
     type: string
   - default: main

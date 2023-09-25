@@ -8,8 +8,8 @@ spec:
     namespace: rosa-cleaner
     server: 'https://kubernetes.default.svc'
   source:
-    path: ./rosa/cronjob
-    repoURL: 'https://gitlab.consulting.redhat.com/mobb/osd-cleaner'
+    path: ./rosa/examples/cronjob
+    repoURL: 'https://github.com/rh-mobb/managed-openshift-cleaner'
     targetRevision: HEAD
   project: rosa-cleaner
   syncPolicy:

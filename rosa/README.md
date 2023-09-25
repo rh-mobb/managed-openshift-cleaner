@@ -7,7 +7,7 @@
 * OCM.json is in the home path
 * Python installed
 
-## what does [rolsa-cleaner.py](./rosa-cleaner.py) do
+## what does [rosa-cleaner.py](./rosa-cleaner.py) do
 
 * The cleaner deletes rosa cluster through red hat cluster manager
 * The cleaner cleans up the oidc connector provider and sts roles
@@ -33,7 +33,7 @@ DELETE="1" python rosa-cleaner.py
 DELETE_NEW_CLUSTERS=[CLUSTER_NAME] DELETE="1" python rosa-cleaner.py
 ```
 
-* Skip Certian Clusters
+* Skip Certain Clusters
 
 ```
 SKIP_CLUSTERS=[CLUSTER_NAME] DELETE="1" python rosa-cleaner.py
@@ -85,47 +85,48 @@ DELETE='1' python orphan-iam-cleaner.py python orphan-iam-cleaner.py
    ```
 
 
-   ```
-cat << EOF | kubectl apply -f -
-apiVersion: v1
-kind: Secret
-type: kubernetes.io/basic-auth
-metadata:
-  annotations:
-    tekton.dev/git-0: https://gitlab.consulting.redhat.com/
-  name: gitlab-rosa-cleaner-auth
-  namespace: rosa-cleaner
-stringData:
-  password: $GL_USERNAME
-  username: $GL_PASSWORD
-EOF
-   ```
+    ```
+    cat << EOF | kubectl apply -f -
+    apiVersion: v1
+    kind: Secret
+    type: kubernetes.io/basic-auth
+    metadata:
+      annotations:
+        tekton.dev/git-0: https://gitlab.consulting.redhat.com/
+      name: gitlab-rosa-cleaner-auth
+      namespace: rosa-cleaner
+    stringData:
+      password: $GL_USERNAME
+      username: $GL_PASSWORD
+    EOF
+    ```
 
 1. Create a secret for gitlab tekton credentials
 
-   ```
-cat << EOF | kubectl apply -f -
-kind: Secret
-apiVersion: v1
-metadata:
-  name: gitlab-rosa-cleaner-clone-auth
-type: Opaque
-stringData:
-  .gitconfig: |
-    [credential]
-      helper = store
-    [credential "https://gitlab.consulting.redhat.com"]
-      username = $GL_USERNAME
-  .git-credentials: |
-    https://$GL_USERNAME:$GL_PASSWORD@gitlab.consulting.redhat.com
-EOF
-   ```
+    ```
+    cat << EOF | kubectl apply -f -
+    kind: Secret
+    apiVersion: v1
+    metadata:
+      name: gitlab-rosa-cleaner-clone-auth
+    type: Opaque
+    stringData:
+      .gitconfig: |
+        [credential]
+          helper = store
+        [credential "https://gitlab.consulting.redhat.com"]
+          username = $GL_USERNAME
+      .git-credentials: |
+        https://$GL_USERNAME:$GL_PASSWORD@gitlab.consulting.redhat.com
+    EOF
+    ```
 
 1. Create a secret for OCM credentials
 
     ```
     kubectl create secret generic openshift-cluster-manager-credentials \
       --from-file=$HOME/.config/ocm/ocm.json
+    ```
 
 1. Link that secret to the pipeline builder user
 
