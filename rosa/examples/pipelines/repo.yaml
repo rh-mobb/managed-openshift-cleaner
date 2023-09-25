@@ -8,7 +8,7 @@ spec:
   url: https://github.com/rh-mobb/managed-openshift-cleaner
   ref: main
   frequency: 5m
-  type: gitlab
+  type: github
   pipelineRef:
     name: rosa-cleaner
     namespace: rosa-cleaner
@@ -24,11 +24,3 @@ spec:
           resources:
             requests:
               storage: 1Gi
-    - name: gitlab-rosa-cleaner-clone-auth
-      secret:
-        secretName: gitlab-rosa-cleaner-clone-auth
-  auth:
-    secretRef:
-      name: gitlab-rosa-cleaner-auth
-      namespace: rosa-cleaner
-    key: password

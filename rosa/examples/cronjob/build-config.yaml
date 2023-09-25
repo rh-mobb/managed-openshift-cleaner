@@ -94,8 +94,6 @@
 #     git:
 #       ref: main
 #       uri: https://github.com/rh-mobb/managed-openshift-cleaner
-#     sourceSecret:
-#       name: gitlab-rosa-cleaner-auth
 #     type: Git
 #   strategy:
 #     sourceStrategy:

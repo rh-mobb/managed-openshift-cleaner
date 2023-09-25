@@ -77,83 +77,33 @@ DELETE='1' python orphan-iam-cleaner.py python orphan-iam-cleaner.py
       --from-literal=aws_secret_access_key=<AWS_SECRET_ACCESS_KEY>
     ```
 
-1. Create a secret for gitlab credentials (create a gitlab auth token for the repo) and save them as Env Variables
-
-   ```
-   export GL_USERNAME=osd-cleaner
-   export GL_PASSWORD=<token>
-   ```
-
+2. Create a secret for OCM credentials
 
     ```
-    cat << EOF | kubectl apply -f -
-    apiVersion: v1
-    kind: Secret
-    type: kubernetes.io/basic-auth
-    metadata:
-      annotations:
-        tekton.dev/git-0: https://gitlab.consulting.redhat.com/
-      name: gitlab-rosa-cleaner-auth
-      namespace: rosa-cleaner
-    stringData:
-      password: $GL_USERNAME
-      username: $GL_PASSWORD
-    EOF
-    ```
-
-1. Create a secret for gitlab tekton credentials
-
-    ```
-    cat << EOF | kubectl apply -f -
-    kind: Secret
-    apiVersion: v1
-    metadata:
-      name: gitlab-rosa-cleaner-clone-auth
-    type: Opaque
-    stringData:
-      .gitconfig: |
-        [credential]
-          helper = store
-        [credential "https://gitlab.consulting.redhat.com"]
-          username = $GL_USERNAME
-      .git-credentials: |
-        https://$GL_USERNAME:$GL_PASSWORD@gitlab.consulting.redhat.com
-    EOF
-    ```
-
-1. Create a secret for OCM credentials
-
-    ```
-    kubectl create secret generic openshift-cluster-manager-credentials \
+    oc create secret generic openshift-cluster-manager-credentials \
       --from-file=$HOME/.config/ocm/ocm.json
     ```
 
-1. Link that secret to the pipeline builder user
-
-    ```
-    oc secret link pipeline gitlab-rosa-cleaner-auth
-    ```
-
-1. Patch the openshift-client clusterTask
+3. Patch the openshift-client clusterTask
 
     ```
     oc patch clustertask openshift-client --type=merge \
       -p='{"spec":{"workspaces":[{"name":"source"}]}}'
     ```
 
-1. Create the tekton pipeline
+4. Create the tekton pipeline
 
     ```
     oc apply -f pipelines/pipeline.yaml
     ```
 
-1. Test the Pipeline
+5. Test the Pipeline
 
     ```
     oc apply -f pipelines/pipeline-run.yaml
     ```
 
-1. Create the build trigger
+6. Create the build trigger
 
     ```
     oc apply -f pipelines/trigger.yaml

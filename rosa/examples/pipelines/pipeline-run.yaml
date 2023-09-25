@@ -10,6 +10,3 @@ spec:
   - name: workspace
     persistentVolumeClaim:
       claimName: rosa-cleaner-builder-pvc
-  - name: gitlab-rosa-cleaner-clone-auth
-    secret:
-      secretName: gitlab-rosa-cleaner-clone-auth
