@@ -40,7 +40,7 @@ metadata:
 spec:
   params:
   - name: git-repo-url
-    value: $(body.repository.git_http_url)
+    value: $(body.repository.html_url)
     # value: $(body.repository.clone_url) # github
   - name: git-repo-name
     value: $(body.repository.name)
