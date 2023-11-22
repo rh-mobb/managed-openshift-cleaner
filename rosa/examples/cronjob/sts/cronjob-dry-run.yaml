@@ -43,9 +43,9 @@ spec:
             - name: OCM_JSON
               value: /auth/ocm.json
             - name: DELETE
-              value: "1" # change to 1 to delete the old clusters
+              value: "0" # change to 1 to delete the old clusters
             - name: SKIP_CLUSTERS
-              value: "" # csv of clusters to skip.  mobb-infra is always skipped.
+              value: "skynet" # csv of clusters to skip.  mobb-infra is always skipped.
           volumes:
           - name: rosa-auth
             secret:
@@ -88,9 +88,9 @@ spec:
             - name: OCM_JSON
               value: /auth/ocm.json
             - name: DELETE
-              value: "1" # change to 1 to delete the old clusters
+              value: "0" # change to 1 to delete the old clusters
             - name: SKIP_CLUSTERS
-              value: "" # csv of clusters to skip.  mobb-infra is always skipped.
+              value: "skynet" # csv of clusters to skip.  mobb-infra is always skipped.
           volumes:
           - name: rosa-auth
             secret:
@@ -133,9 +133,9 @@ spec:
             - name: OCM_JSON
               value: /auth/ocm.json
             - name: DELETE
-              value: "1" # change to 1 to delete the old clusters
+              value: "0" # change to 1 to delete the old clusters
             - name: SKIP_CLUSTERS
-              value: "" # csv of clusters to skip.  mobb-infra is always skipped.
+              value: "skynet" # csv of clusters to skip.  mobb-infra is always skipped.
           volumes:
           - name: rosa-auth
             secret:
